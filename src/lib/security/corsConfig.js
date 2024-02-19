@@ -1,7 +1,7 @@
 import cors from 'cors';
 
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
+  origin: process.env.CORS_ORIGIN, //eslint-disable-line
   optionsSuccessStatus: 200
 };
 
