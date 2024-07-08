@@ -1,22 +1,21 @@
 import express from "express";
 import morgan from "morgan";
-import db from "./db/dbConfig.js";
+import db from "./db/dbConfig";
 import dotenv from "dotenv";
-import variantsRouter from "./entities/variants/variantsRoutes.js";
-import categoryRouter from "./entities/category/categoryRoutes.js";
-import extraRouter from "./entities/extra/extraRoutes.js";
-import payMethodRouter from "./entities/payMethod/payMethodRoutes.js";
-import productRouter from "./entities/product/productRoutes.js";
-import paymentRouter from "./entities/payments/paymentRoutes.js";
-import openHoursRouter from "./entities/OpenHours/openHoursRoutes.js";
-import storeRouter from "./entities/store/storeRoutes.js";
+import variantsRouter from "./entities/variants/variantsRoutes";
+import categoryRouter from "./entities/category/categoryRoutes";
+import extraRouter from "./entities/extra/extraRoutes";
+import payMethodRouter from "./entities/payMethod/payMethodRoutes";
+import productRouter from "./entities/product/productRoutes";
+import paymentRouter from "./entities/payments/paymentRoutes";
+import openHoursRouter from "./entities/OpenHours/openHoursRoutes";
+import storeRouter from "./entities/store/storeRoutes";
 import compression from "compression";
-import corsMiddleware from './lib/security/corsConfig.js';
-import userCredentialsRouter from "./entities/user/userCredentials/userCredentialsRoutes.js";
-import userRoutes from "./entities/user/userData/userRoutes.js";
+import corsMiddleware from './lib/security/corsConfig';
+import userCredentialsRouter from "./entities/user/userCredentials/userCredentialsRoutes";
+import userRoutes from "./entities/user/userData/userRoutes";
 
 dotenv.config();
-
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 4000;
 const app/*:express.Application*/ = express();

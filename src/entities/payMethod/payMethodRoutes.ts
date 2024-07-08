@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { deleteById, edit, add, getAll, getById } from './payMethodController.js';
-import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware.js';
-import authenticateToken from '../../lib/middlewares/authenticateToken.js';
+import { deleteById, edit, add, getAll, getById } from './payMethodController';
+import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware';
+import authenticateToken from '../../lib/middlewares/authenticateToken';
 
-const payMethodRouter = new Router();
+const payMethodRouter = Router();
 
 payMethodRouter.get('/payMethod', authenticateToken, handleErrorsMiddleware(getAll));
 payMethodRouter.get('/payMethod/:id', authenticateToken, handleErrorsMiddleware(getById));

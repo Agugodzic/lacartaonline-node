@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { login, register } from './userCredentialsController.js';
-import handleErrorsMiddleware from '../../../lib/middlewares/handleErrorsMiddleware.js';
+import { login, register } from './userCredentialsController.ts';
+import handleErrorsMiddleware from '../../../lib/middlewares/handleErrorsMiddleware.ts';
 
-const userRouter = new Router();
+const userRouter = Router();
 
 userRouter.post('/login', handleErrorsMiddleware(login));
 

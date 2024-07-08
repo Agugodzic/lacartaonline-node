@@ -1,52 +1,79 @@
-import DataTypes from "sequelize";
-import db from "../../db/dbConfig.js";
-import Variants from "../variants/VariantsModel.js";
-import Category from "../category/CategoryModel.js";
+import { DataTypes, Model } from 'sequelize';
+import db from '../../db/dbConfig';
+import Variants from '../variants/VariantsModel';
+import Category from '../category/CategoryModel';
 
-  const Product = db.define(
-    "product",
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      categoryid: {
-        type: DataTypes.INTEGER,
-      },
-      storeid: {
-        type: DataTypes.INTEGER,
-      },
-      unitprice: {
-        type: DataTypes.FLOAT,
-        defaultValue:0
-      },
-      productname: {
-        type: DataTypes.STRING,
-      },
-      description: {
-        type: DataTypes.STRING,
-      },
-      withVariants:{
-        type: DataTypes.BOOLEAN
-      },
-      image: { 
-        type: DataTypes.TEXT('long') 
-      }
-    }
-  );
+interface ProductAttributes {
+  id: number;
+  categoryid: number;
+  storeid: number;
+  unitprice: number;
+  productname: string;
+  description: string;
+  withVariants: boolean;
+  image: string;
+}
 
-  Product.hasOne(Variants, {
-    as: 'variants',
-    foreignKey: 'productid',
-  });
+class Product extends Model<ProductAttributes> implements ProductAttributes {
+  public id!: number;
+  public categoryid!: number;
+  public storeid!: number;
+  public unitprice!: number;
+  public productname!: string;
+  public description!: string;
+  public withVariants!: boolean;
+  public image!: string;
 
-  Category.hasMany(Product, {
-    foreignKey: 'categoryid',
-  });
-  
-  Product.belongsTo(Category, {
-    foreignKey: 'categoryid',
-  });
+  static associate() {
+    this.hasOne(Variants, {
+      as: 'variants',
+      foreignKey: 'productid',
+    });
 
-  export default Product;
+    Category.hasMany(Product, {
+      foreignKey: 'categoryid',
+    });
+
+    this.belongsTo(Category, {
+      foreignKey: 'categoryid',
+    });
+  }
+}
+
+Product.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    categoryid: {
+      type: DataTypes.INTEGER,
+    },
+    storeid: {
+      type: DataTypes.INTEGER,
+    },
+    unitprice: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+    },
+    productname: {
+      type: DataTypes.STRING,
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
+    withVariants: {
+      type: DataTypes.BOOLEAN,
+    },
+    image: {
+      type: DataTypes.TEXT('long'),
+    },
+  },
+  {
+    sequelize: db,
+    modelName: 'Product',
+  }
+);
+
+export default Product;

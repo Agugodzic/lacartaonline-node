@@ -1,23 +1,24 @@
 import bcrypt from 'bcrypt';
-import UserCredentials from './UserCredentialsModel.js';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../userData/UserModel.js';
+import UserCredentials from './UserCredentialsModel';
+import User from '../userData/UserModel';
 
 const userCredentials = UserCredentials;
 const userModel = User;
 
-const logout = (req, res) => {
+const logout = (req: Request, res: Response): Response => {
   return res.json({ message: 'Logout exitoso' });
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
 
   await userCredentials.destroy({
     where: { id },
   });
 
-  return res.json({ message: 'Usuario eliminado exitosamente' });
+  res.json({ message: 'Usuario eliminado exitosamente' });
 };
 
 //errors:
@@ -25,7 +26,7 @@ const deleteUser = async (req, res) => {
 // 2 - email already exist
 // 3 - password or user incorrect
 
-const register = async (req, res) => {
+const register = async (req: Request, res: Response): Promise<void> => {
   const { user, password, name, province, address, email, phone, country } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10); 
 
@@ -33,17 +34,17 @@ const register = async (req, res) => {
   const existingEmail = await User.findOne({ where: { email } });
 
   if (existingUser) {
-    return res.json({ success:false, error:'Error: User already exist.' ,errorId:1});
+    res.json({ success:false, error:'Error: User already exist.' ,errorId:1});
   }
 
   if (existingEmail) {
-    return res.json({ success:false, error:'Error: Email already exist.' ,errorId:2});
+    res.json({ success:false, error:'Error: Email already exist.' ,errorId:2});
   }
 
   const newUser = await userModel.create({
     name:name,
     province:province,
-    address:address,
+   // address:address,
     email:email,
     phone:phone,
     country:country
@@ -55,16 +56,16 @@ const register = async (req, res) => {
     password: hashedPassword
   });
   
-  const secretKey = process.env.SECRET_KEY; //eslint-disable-line
+  const secretKey = process.env.SECRET_KEY || ''; //eslint-disable-line
   const token = jwt.sign({userId:newUser.id},secretKey,{expiresIn:'24h'});
  
-  return res.json({success:true,error:'No errors',errorId:0,token:token,data:{  
+  res.json({success:true,error:'No errors',errorId:0,token:token,data:{  
     ...newUser
   }})
 };
 
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response): Promise<void> => {
   const { user, password, keepConnected } = req.body;
 
   const userCredential = await userCredentials.findOne({
@@ -76,23 +77,23 @@ const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, userCredential.password);
 
     if (isPasswordValid) {
-      const secretKey = process.env.SECRET_KEY; //eslint-disable-line
+      const secretKey = process.env.SECRET_KEY || ''; //eslint-disable-line
       const userData = await userModel.findOne({
-        where: userCredential.user_id,
+        where: { id: userCredential.userId || 0},
       });
 
       const userId = userCredential.userId || 0;
-      if(keepConnected === true){
-        const token = jwt.sign({userId:userId},secretKey,{expiresIn:'24h'});
-        return res.json({success:true, message:'Login success', token:token, userData:userData});
-      }else{
-        const token = jwt.sign({userId:userId},secretKey);
-        return res.json({success:true, message:'Login success', token:token, userData:userData});
+      if (keepConnected === true) {
+        const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '24h' });
+        res.json({ success: true, message: 'Login success', token: token, userData: userData });
+      } else {
+        const token = jwt.sign({ userId: userId }, secretKey);
+        res.json({ success: true, message: 'Login success', token: token, userData: userData });
       }
     }
   }
 
-  return res.json({ success:false, message:'Credenciales incorrectas', token:false, errorId:3});
+  res.json({ success: false, message: 'Credenciales incorrectas', token: false, errorId: 3 });
 };
 
 export { login, logout, register, deleteUser };

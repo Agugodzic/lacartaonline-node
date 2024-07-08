@@ -1,4 +1,4 @@
-import db from "../../db/dbConfig.js"
+import db from "../../db/dbConfig"
 import DataTypes from "sequelize";
 // Define el modelo de suscripciones
 const Subscription = db.define('Subscription', {

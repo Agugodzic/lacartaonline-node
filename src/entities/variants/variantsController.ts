@@ -1,38 +1,35 @@
-import Variants from './VariantsModel.js';
+import Variants from './VariantsModel.ts';
+import { Request, Response } from 'express';
 
 const variants = Variants;
 
-const getAll = async (req,res) => {
+const getAll = async (req: Request, res: Response): Promise<void> => {
   const results = await variants.findAll();
-  return res.json(results);
+  res.json(results);
 }
 
-const getById = async (req,res) => {
+const getById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const resource = await variants.findByPk(id);
-
-  return res.json(resource);
+  res.json(resource);
 }
 
-const add = async (req, res) => {
+const add = async (req: Request, res: Response): Promise<void> => {
   const resource = req.body;
   const createObject = await variants.create(resource);
-
-  return res.json(createObject);
+  res.json(createObject);
 }
 
-const edit = async (req, res) => {
+const edit = async (req: Request, res: Response): Promise<void> => {
   const resource = req.body;
-  const updateObject = await variants.update(resource,{where:{id: resource.id}});
-
-  return res.json(updateObject);
+  await variants.update(resource, { where: { id: resource.id } });
+  res.json({ message: 'Variant updated successfully' });
 }
 
-const deleteById = async (req, res) => {
+const deleteById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.body;
-  const deleteObject = await variants.destroy(id);
-
-  return res.json(deleteObject);
+  await variants.destroy(id);
+  res.json({ message: 'Variant deleted successfully' });
 }
 
 export { getAll, getById, add, edit, deleteById };

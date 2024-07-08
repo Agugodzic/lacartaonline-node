@@ -1,40 +1,41 @@
-import Extra from './ExtraModel.js';
+import Extra from './ExtraModel';
+import { Request, Response } from 'express';
 
 const extra = Extra;
 
-const getAll = async (req,res) => {
+const getAll = async (req:Request,res:Response):Promise<void> => {
   const results = await extra.findAll();
-  return res.json(results);
+  res.json(results);
 }
 
-const getById = async (req,res) => {
+const getById = async (req:Request,res:Response):Promise<void> => {
   const { id } = req.params;
   const resource = await extra.findByPk(id);
-
-  return res.json(resource);
+  
+  res.json(resource);
 }
 
-const add = async (req, res) => {
+const add = async (req:Request,res:Response):Promise<void> => {
   const resource = req.body;
   const createObject = await extra.create(resource);
 
-  return res.json(createObject);
+  res.json(createObject);
 }
 
-const edit = async (req, res) => {
+const edit = async (req:Request,res:Response):Promise<void> => {
   const resource = req.body;
   const updateObject = await extra.update(resource,{where:{id: resource.id}});
 
-  return res.json(updateObject);
+  res.json(updateObject);
 }
 
-const deleteById = async (req, res) => {
+const deleteById = async (req:Request,res:Response):Promise<void> => {
   const { id } = req.params;
   const deleteObject = await extra.destroy({
     where: { id: id }
   });
 
-  return res.json(deleteObject);
+  res.json(deleteObject);
 }
 
 export { getAll, getById, add, edit, deleteById };

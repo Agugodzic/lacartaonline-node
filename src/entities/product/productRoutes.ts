@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { deleteById, edit, add, getAll, getById, getAllMixProducts, getMixById } from './productController.js';
-import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware.js';
-import authenticateToken from '../../lib/middlewares/authenticateToken.js';
+import { deleteById, edit, add, getAll, getById, getAllMixProducts, getMixById } from './productController';
+import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware';
+import authenticateToken from '../../lib/middlewares/authenticateToken';
 
-const productRouter = new Router();
+const productRouter = Router();
 
 productRouter.get('/product', authenticateToken, handleErrorsMiddleware(getAll));
 productRouter.get('/product/:id', authenticateToken, handleErrorsMiddleware(getById));

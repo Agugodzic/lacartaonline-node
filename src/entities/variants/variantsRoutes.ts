@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { deleteById, edit, add, getAll, getById } from './variantsController.js';
-import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware.js';
-import authenticateToken from '../../lib/middlewares/authenticateToken.js';
+import { deleteById, edit, add, getAll, getById } from './variantsController.ts';
+import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware.ts';
+import authenticateToken from '../../lib/middlewares/authenticateToken.ts';
 
-const variantsRouter = new Router();
+const variantsRouter = Router();
 
 variantsRouter.get('/variants', authenticateToken, handleErrorsMiddleware(getAll));
 variantsRouter.get('/variants/:id', authenticateToken, handleErrorsMiddleware(getById));

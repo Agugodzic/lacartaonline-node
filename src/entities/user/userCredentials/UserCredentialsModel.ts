@@ -1,7 +1,27 @@
-import DataTypes from "sequelize";
-import db from "../../../db/dbConfig.js";
+import { DataTypes, Model } from 'sequelize';
+import db from '../../../db/dbConfig.ts';
 
-const UserCredentials = db.define('user_credentials', {
+interface UserCredentialsAttributes {
+  id?: number;
+  userId: number | null;
+  user: string;
+  password: string;
+  keep_connected?: boolean;
+}
+
+class UserCredentials extends Model<UserCredentialsAttributes> implements UserCredentialsAttributes {
+  public id!: number;
+  public userId!: number | null;
+  public user!: string;
+  public password!: string;
+  public keep_connected!: boolean;
+
+  static associate() {
+    // Define las asociaciones con otros modelos si es necesario
+  }
+}
+
+UserCredentials.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -10,7 +30,7 @@ const UserCredentials = db.define('user_credentials', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    defaultValue:0
+    defaultValue: 0,
   },
   user: {
     type: DataTypes.STRING,
@@ -23,13 +43,15 @@ const UserCredentials = db.define('user_credentials', {
   keep_connected: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: false, 
+    defaultValue: false,
   },
 }, {
+  sequelize: db,
+  modelName: 'UserCredentials',
   timestamps: true,
   underscored: true,
 });
 
-
 export default UserCredentials;
+
 

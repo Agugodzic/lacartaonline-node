@@ -1,38 +1,39 @@
-import User from './UserModel.js';
+import User from './UserModel.ts';
+import { Request, Response } from 'express';
 
 const user = User;
 
-const getAll = async (req,res) => {
+const getAll = async (req: Request, res: Response): Promise<void> => {
   const results = await user.findAll();
-  return res.json(results);
+  res.json(results);
 }
 
-const getById = async (req,res) => {
+const getById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const resource = await user.findByPk(id);
 
-  return res.json(resource);
+  res.json(resource);
 }
 
-const add = async (req, res) => {
+const add = async (req: Request, res: Response): Promise<void> => {
   const resource = req.body;
   const createObject = await user.create(resource);
 
-  return res.json(createObject);
+  res.json(createObject);
 }
 
-const edit = async (req, res) => {
+const edit = async (req: Request, res: Response): Promise<void> => {
   const resource = req.body;
-  const update = await user.update(resource,{where:{id: resource.id}});
+  const update = await user.update(resource, { where: { id: resource.id } });
 
-  return res.json({update:update,resource:resource});
+  res.json({ update: update, resource: resource });
 }
 
-const deleteById = async (req, res) => {
+const deleteById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.body;
   const deleteObject = await user.destroy(id);
 
-  return res.json(deleteObject);
+  res.json(deleteObject);
 }
 
 export { getAll, getById, add, edit, deleteById };

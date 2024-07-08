@@ -1,6 +1,15 @@
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-function authenticateToken(req, res, next) {
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
+
+function authenticateToken(req:Request, res:Response, next:NextFunction) {
   const secretKey = process.env.SECRET_KEY; //eslint-disable-line
   const token = req.header('Authorization');
 
@@ -8,7 +17,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ error: 'Access denied. Token not provided.' });
   }
 
-  jwt.verify(token, secretKey , (err, user) => {
+  jwt.verify(token, secretKey || '' , (err:any, user:any) => {
     if (err) {
       return res.status(403).json({ error: 'Invalid token.' });
     }

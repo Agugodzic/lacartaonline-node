@@ -1,69 +1,62 @@
-import Product from './ProductModel.js';
-import Category from '../category/CategoryModel.js';
-import Variants from '../variants/VariantsModel.js';
+import Product from './ProductModel';
+import Category from '../category/CategoryModel';
+import Variants from '../variants/VariantsModel';
+import { Request, Response } from 'express';
 
 const product = Product;
 
-const getAll = async (req,res) => {
+const getAll = async (req: Request, res: Response): Promise<void> => {
   const results = await product.findAll();
-  return res.json(results);
-}
+  res.json(results);
+};
 
-const getById = async (req,res) => {
+const getById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const resource = await product.findByPk(id);
+  res.json(resource);
+};
 
-  return res.json(resource);
-}
-
-const getMixById = async (req,res) => {
+const getMixById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const resource = await product.findByPk(id,
-    {include: [
+  const resource = await product.findByPk(id, {
+    include: [
       {
         model: Category,
         attributes: ['id', 'categoryname']
-
       },
       {
         model: Variants,
         as: 'variants'
       },
-    ]});
+    ]
+  });
+  res.json(resource);
+};
 
-  return res.json(resource);
-}
-
-const add = async (req, res) => {
+const add = async (req: Request, res: Response): Promise<void> => {
   const resource = req.body;
   const createObject = await product.create(resource);
+  res.json(createObject);
+};
 
-  return res.json(createObject);
-}
-
-const edit = async (req, res) => {
+const edit = async (req: Request, res: Response): Promise<void> => {
   const resource = req.body;
-  const updateObject = await product.update(resource,{where:{id: resource.id}});
+  const updateObject = await product.update(resource, { where: { id: resource.id } });
+  res.json(updateObject);
+};
 
-  return res.json(updateObject);
-}
-
-const deleteById = async (req, res) => {
+const deleteById = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const deleteObject = await product.destroy({
     where: { id: id }
-  })
+  });
+  res.json(deleteObject);
+};
 
-  return res.json(deleteObject);
-}
-
-const getAllMixProducts = async (req, res) => {
+const getAllMixProducts = async (req: Request, res: Response): Promise<void> => {
   const { storeid } = req.params;
-
-  const product = await Product.findAll({
-    where:{
-      storeid:storeid
-    },
+  const products = await Product.findAll({
+    where: { storeid: storeid },
     include: [
       {
         model: Category
@@ -74,8 +67,7 @@ const getAllMixProducts = async (req, res) => {
       },
     ],
   });
-
-  return res.json(product);
+  res.json(products);
 };
 
-export { getAll, getById, add, edit, deleteById, getAllMixProducts, getMixById};
+export { getAll, getById, add, edit, deleteById, getAllMixProducts, getMixById };

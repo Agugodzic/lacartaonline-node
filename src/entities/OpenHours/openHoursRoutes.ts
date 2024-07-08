@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { deleteById, edit, add, getAll, getById } from './openHoursController.js';
-import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware.js';
-import authenticateToken from '../../lib/middlewares/authenticateToken.js';
+import { deleteById, edit, add, getAll, getById } from './openHoursController';
+import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware';
+import authenticateToken from '../../lib/middlewares/authenticateToken';
 
-const openHoursRouter = new Router();
+const openHoursRouter = Router();
 
 openHoursRouter.get('/openHours', authenticateToken, handleErrorsMiddleware(getAll));
 openHoursRouter.get('/openHours/:id', authenticateToken, handleErrorsMiddleware(getById));

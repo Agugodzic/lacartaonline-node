@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { deleteById, edit, getAll, add,  getById, getAllMix, getMixById } from './categoryController.js';
-import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware.js';
-import authenticateToken from '../../lib/middlewares/authenticateToken.js';
+import { deleteById, edit, getAll, add,  getById, getAllMix, getMixById } from './categoryController';
+import handleErrorsMiddleware from '../../lib/middlewares/handleErrorsMiddleware';
+import authenticateToken from '../../lib/middlewares/authenticateToken';
 
-const categoryRouter = new Router();
+const categoryRouter = Router();
 
 categoryRouter.get('/category/:storeid', authenticateToken, handleErrorsMiddleware(getAll));
 categoryRouter.get('/category/:id', authenticateToken, handleErrorsMiddleware(getById));

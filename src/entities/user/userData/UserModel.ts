@@ -1,7 +1,33 @@
-import { DataTypes } from "sequelize";
-import db from "../../../db/dbConfig.js";
+import { DataTypes, Model } from 'sequelize';
+import db from '../../../db/dbConfig.ts';
 
-const User = db.define('user', {
+interface UserAttributes {
+  id?: number;
+  store_id: number | null;
+  name: string;
+  country: string;
+  phone: string;
+  email: string;
+  province: string | null;
+  plan: number | null;
+}
+
+class User extends Model<UserAttributes> implements UserAttributes {
+  public id!: number;
+  public store_id!: number | null;
+  public name!: string;
+  public country!: string;
+  public phone!: string;
+  public email!: string;
+  public province!: string | null;
+  public plan!: number | null;
+
+  static associate() {
+    // Define las asociaciones con otros modelos si es necesario
+  }
+}
+
+User.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -36,9 +62,10 @@ const User = db.define('user', {
     allowNull: true,
   }
 },{
+  sequelize: db,
+  modelName: 'User',
   timestamps: true,
   underscored: true,
 });
-
 
 export default User;
