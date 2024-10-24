@@ -14,12 +14,19 @@ import compression from "compression";
 import corsMiddleware from './lib/security/corsConfig';
 import userCredentialsRouter from "./entities/user/userCredentials/userCredentialsRoutes";
 import userRoutes from "./entities/user/userData/userRoutes";
+import Category from "./entities/category/CategoryModel";
+import Product from "./entities/product/ProductModel";
+import Extra from "./entities/extra/ExtraModel";
 
 dotenv.config();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 4000;
 const app/*:express.Application*/ = express();
 const DB = db;
+
+Product.associate();
+Extra.associate();
+Category.associate();
 
 
 app.use(morgan('dev'));

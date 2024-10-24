@@ -30,11 +30,8 @@ class Product extends Model<ProductAttributes> implements ProductAttributes {
       foreignKey: 'productid',
     });
 
-    Category.hasMany(Product, {
-      foreignKey: 'categoryid',
-    });
-
     this.belongsTo(Category, {
+      as: 'category',
       foreignKey: 'categoryid',
     });
   }

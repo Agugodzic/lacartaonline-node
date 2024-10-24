@@ -22,8 +22,8 @@ const getAllMix = async (req: Request, res: Response): Promise<void> => {
     const categories = await Category.findAll({
       where: { storeid: storeid },
       include: [
-        { model: Extra, attributes: ['id', 'categoryid', 'extra', 'price'] },
-        { model: Product, attributes: ['id'], required: false }
+        { model: Extra, as:'extras', attributes: ['id', 'categoryid', 'extra', 'price'] },
+        { model: Product, as:'products',attributes: ['id'], required: false }
       ]
     });
     res.json(categories);
@@ -38,8 +38,8 @@ const getMixById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const result = await Category.findByPk(id, {
       include: [
-        { model: Extra, attributes: ['id', 'categoryid', 'extra', 'price'] },
-        { model: Product, attributes: ['id'], required: false }
+        { model: Extra, as:'extras', attributes: ['id', 'categoryid', 'extra', 'price'] },
+        { model: Product, as:'products', attributes: ['id'], required: false }
       ]
     });
     res.json(result);

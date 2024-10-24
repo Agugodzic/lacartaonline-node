@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db/dbConfig';
+import Category from '../category/CategoryModel';
 
 interface ExtraAttributes {
   id: number;
@@ -14,8 +15,17 @@ class Extra extends Model<ExtraAttributes> implements ExtraAttributes {
   public extra!: string;
   public price!: number;
 
+  static associate() {
+    this.belongsTo(Category, {
+      as: 'category',
+      foreignKey: 'categoryid',
+    });
+  }
+  
   // Método estático para inicializar el modelo
   static initModel(): void {
+
+
     this.init(
       {
         id: {
@@ -44,6 +54,7 @@ class Extra extends Model<ExtraAttributes> implements ExtraAttributes {
     );
   }
 }
+
 
 // Inicializar el modelo
 Extra.initModel();

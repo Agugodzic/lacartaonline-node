@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db/dbConfig';
 import Extra from '../extra/ExtraModel';
+import Product from '../product/ProductModel';
 
 interface CategoryAttributes {
   id: number;
@@ -53,10 +54,15 @@ class Category extends Model<CategoryAttributes> implements CategoryAttributes {
       }
     );
   }
-
   // Definir las relaciones con otros modelos
   static associate(): void {
+    this.hasMany(Product, {
+      as: 'products', // Alias para la asociación, puede ser opcional
+      foreignKey: 'categoryid',
+    });
+    
     this.hasMany(Extra, {
+      as:'extras',
       foreignKey: 'categoryid',
     });
   }
@@ -65,7 +71,5 @@ class Category extends Model<CategoryAttributes> implements CategoryAttributes {
 // Inicializar el modelo
 Category.initModel();
 
-// Asociar el modelo con otras relaciones
-Category.associate();
 
 export default Category;

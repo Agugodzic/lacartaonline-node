@@ -22,6 +22,7 @@ const getMixById = async (req: Request, res: Response): Promise<void> => {
     include: [
       {
         model: Category,
+        as: 'category', 
         attributes: ['id', 'categoryname']
       },
       {
@@ -59,7 +60,8 @@ const getAllMixProducts = async (req: Request, res: Response): Promise<void> => 
     where: { storeid: storeid },
     include: [
       {
-        model: Category
+        model: Category,
+        as:'category'
       },
       {
         model: Variants,
