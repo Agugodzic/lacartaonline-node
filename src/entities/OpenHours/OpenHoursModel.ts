@@ -70,6 +70,7 @@ class OpenHours extends Model<OpenHoursAttributes> implements OpenHoursAttribute
         sequelize: db,
         modelName: 'OpenHours', // Nombre del modelo en la base de datos
         timestamps: false,
+        tableName:'openhours'
       }
     );
   }

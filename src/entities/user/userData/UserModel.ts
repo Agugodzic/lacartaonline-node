@@ -3,7 +3,6 @@ import db from '../../../db/dbConfig.ts';
 
 interface UserAttributes {
   id?: number;
-  store_id: number | null;
   name: string;
   country: string;
   phone: string;
@@ -14,7 +13,6 @@ interface UserAttributes {
 
 class User extends Model<UserAttributes> implements UserAttributes {
   public id!: number;
-  public store_id!: number | null;
   public name!: string;
   public country!: string;
   public phone!: string;
@@ -32,10 +30,6 @@ User.init({
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-  },
-  store_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
   },
   name: {
     type: DataTypes.STRING,
@@ -61,7 +55,7 @@ User.init({
     type: DataTypes.INTEGER,
     allowNull: true,
   }
-},{
+}, {
   sequelize: db,
   modelName: 'User',
   timestamps: true,

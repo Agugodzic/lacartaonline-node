@@ -97,7 +97,8 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
       },
       {
         sequelize: db,
-        modelName: "Store", // Nombre del modelo en la base de datos
+        modelName: "Store",
+        tableName: 'stores',
         timestamps: true,
       }
     );
@@ -121,7 +122,5 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
 // Inicializar el modelo
 Store.initModel();
 
-// Asociar el modelo con otras relaciones
-Store.associate();
 
 export default Store;

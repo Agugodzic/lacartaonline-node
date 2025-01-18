@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db/dbConfig';
+import Store from '../store/storeModel';
 
 interface PayMethodAttributes {
   id: number;
@@ -46,12 +47,23 @@ class PayMethod extends Model<PayMethodAttributes> implements PayMethodAttribute
         sequelize: db,
         modelName: 'PayMethod', // Nombre del modelo en la base de datos
         timestamps: false,
+        tableName:'paymethods'
       }
     );
   }
+
+
+  static associate(): void {
+    this.belongsTo(Store, { foreignKey: 'storeid', as: 'Store' });
+  }
+
+
 }
 
 // Inicializar el modelo
 PayMethod.initModel();
+
+
+
 
 export default PayMethod;

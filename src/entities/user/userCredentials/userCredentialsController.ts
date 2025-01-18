@@ -18,7 +18,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
     where: { id },
   });
 
-  res.json({ message: 'Usuario eliminado exitosamente' });
+  res.json({ message: 'Usuario eliminado' });
 };
 
 //errors:
@@ -28,40 +28,44 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 
 const register = async (req: Request, res: Response): Promise<void> => {
   const { user, password, name, province, address, email, phone, country } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10); 
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await UserCredentials.findOne({ where: { user } });
   const existingEmail = await User.findOne({ where: { email } });
 
   if (existingUser) {
-    res.json({ success:false, error:'Error: User already exist.' ,errorId:1});
+    res.json({ success: false, error: 'Error: User already exist.', errorId: 1 });
+    return;
   }
 
   if (existingEmail) {
-    res.json({ success:false, error:'Error: Email already exist.' ,errorId:2});
+    res.json({ success: false, error: 'Error: Email already exist.', errorId: 2 });
+    return;
   }
 
   const newUser = await userModel.create({
-    name:name,
-    province:province,
-   // address:address,
-    email:email,
-    phone:phone,
-    country:country
+    name: name,
+    province: province,
+    // address:address,
+    email: email,
+    phone: phone,
+    country: country
   });
 
   await userCredentials.create({
-    userId:newUser.id,
-    user:user,
+    userId: newUser.id,
+    user: user,
     password: hashedPassword
   });
-  
+
   const secretKey = process.env.SECRET_KEY || ''; //eslint-disable-line
-  const token = jwt.sign({userId:newUser.id},secretKey,{expiresIn:'24h'});
- 
-  res.json({success:true,error:'No errors',errorId:0,token:token,data:{  
-    ...newUser
-  }})
+  const token = jwt.sign({ userId: newUser.id }, secretKey, { expiresIn: '24h' });
+
+  res.json({
+    success: true, error: 'No errors', errorId: 0, token: token, data: {
+      ...newUser
+    }
+  })
 };
 
 
@@ -79,21 +83,24 @@ const login = async (req: Request, res: Response): Promise<void> => {
     if (isPasswordValid) {
       const secretKey = process.env.SECRET_KEY || ''; //eslint-disable-line
       const userData = await userModel.findOne({
-        where: { id: userCredential.userId || 0},
+        where: { id: userCredential.userId || 0 },
       });
 
       const userId = userCredential.userId || 0;
       if (keepConnected === true) {
         const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '24h' });
         res.json({ success: true, message: 'Login success', token: token, userData: userData });
+        return;
+
       } else {
         const token = jwt.sign({ userId: userId }, secretKey);
         res.json({ success: true, message: 'Login success', token: token, userData: userData });
+        return;
       }
     }
   }
 
-  res.json({ success: false, message: 'Credenciales incorrectas', token: false, errorId: 3 });
+  res.json({ success: false, message: 'Usuario o contraseña incorrectos', token: false, errorId: 3 });
 };
 
 export { login, logout, register, deleteUser };

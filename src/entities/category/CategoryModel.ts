@@ -48,7 +48,7 @@ class Category extends Model<CategoryAttributes> implements CategoryAttributes {
       },
       {
         sequelize: db,
-        modelName: 'Category', // Nombre del modelo en la base de datos
+        modelName: 'Category',
         timestamps: false,
         tableName: 'category',
       }

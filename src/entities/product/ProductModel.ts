@@ -2,6 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../../db/dbConfig';
 import Variants from '../variants/VariantsModel';
 import Category from '../category/CategoryModel';
+import Store from '../store/storeModel';
 
 interface ProductAttributes {
   id: number;
@@ -33,6 +34,10 @@ class Product extends Model<ProductAttributes> implements ProductAttributes {
     this.belongsTo(Category, {
       as: 'category',
       foreignKey: 'categoryid',
+    });
+    this.belongsTo(Store, {
+      as: 'store',
+      foreignKey: 'storeid',
     });
   }
 }
@@ -70,6 +75,7 @@ Product.init(
   {
     sequelize: db,
     modelName: 'Product',
+    tableName: 'products'
   }
 );
 

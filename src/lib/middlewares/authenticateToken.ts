@@ -4,12 +4,12 @@ import jwt from 'jsonwebtoken';
 declare global {
   namespace Express {
     interface Request {
-      user?: any;
+      userid: number;
     }
   }
 }
 
-function authenticateToken(req:Request, res:Response, next:NextFunction) {
+function authenticateToken(req: Request, res: Response, next: NextFunction) {
   const secretKey = process.env.SECRET_KEY; //eslint-disable-line
   const token = req.header('Authorization');
 
@@ -17,12 +17,12 @@ function authenticateToken(req:Request, res:Response, next:NextFunction) {
     return res.status(401).json({ error: 'Access denied. Token not provided.' });
   }
 
-  jwt.verify(token, secretKey || '' , (err:any, user:any) => {
+  jwt.verify(token, secretKey || '', (err: any, decoded: any) => {
     if (err) {
       return res.status(403).json({ error: 'Invalid token.' });
     }
-    
-    req.user = user;
+
+    req.userid = decoded.userId;
     next();
   });
 }

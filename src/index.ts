@@ -6,7 +6,7 @@ import variantsRouter from "./entities/variants/variantsRoutes";
 import categoryRouter from "./entities/category/categoryRoutes";
 import extraRouter from "./entities/extra/extraRoutes";
 import payMethodRouter from "./entities/payMethod/payMethodRoutes";
-import productRouter from "./entities/product/productRoutes";
+import productRouter from "./entities/product/productRoutes"; 
 import paymentRouter from "./entities/payments/paymentRoutes";
 import openHoursRouter from "./entities/OpenHours/openHoursRoutes";
 import storeRouter from "./entities/store/storeRoutes";
@@ -17,16 +17,21 @@ import userRoutes from "./entities/user/userData/userRoutes";
 import Category from "./entities/category/CategoryModel";
 import Product from "./entities/product/ProductModel";
 import Extra from "./entities/extra/ExtraModel";
+import Store from "./entities/store/storeModel";
+import PayMethod from "./entities/payMethod/PayMethodModel";
 
 dotenv.config();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 4000;
-const app/*:express.Application*/ = express();
+const app:express.Application = express();
 const DB = db;
 
 Product.associate();
 Extra.associate();
 Category.associate();
+PayMethod.associate();
+Store.associate();
+
 
 
 app.use(morgan('dev'));
