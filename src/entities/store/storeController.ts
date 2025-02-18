@@ -2,7 +2,6 @@ import Store, { StoreAttributes } from './storeModel';
 import PayMethod from '../payMethod/PayMethodModel';
 import OpenHours, { OpenHoursAttributes } from '../OpenHours/OpenHoursModel';
 import { Request, Response } from 'express';
-import StoreModel from '../../interfaces/StoreModel';
 import UserRequest from '../../interfaces/UserRequest';
 
 const store = Store;
@@ -38,6 +37,7 @@ const add = async (req: Request, res: Response): Promise<void> => {
   route = await checkAndAdjustRoute(route);
   resource.route = route;
   resource.phone = resource.phone.replace(/\s/g, '');
+  resource.userid = req.userid;
 
   const createObject: StoreAttributes = await store.create(resource);
 
@@ -56,6 +56,19 @@ const add = async (req: Request, res: Response): Promise<void> => {
 
   res.json(createObject.id);
 };
+
+
+const edit = async (req: UserRequest, res: Response): Promise<void> => {
+  const resource = req.body;
+  const userid = req.userid;
+  const userStore = await store.findOne({
+    where: { userid }
+  });
+
+  const updateObject = await userStore?.update(resource);
+  res.json(updateObject);
+};
+
 
 const generateRoute = (storename: string): string => {
   return storename.toLowerCase().replace(/\s+/g, '');
@@ -109,11 +122,6 @@ const getMix = async (req: UserRequest, res: Response): Promise<void> => {
   res.json(resource);
 };
 
-const edit = async (req: Request, res: Response): Promise<void> => {
-  const resource = req.body;
-  const updateObject = await store.update(resource, { where: { id: resource.id } });
-  res.json(updateObject);
-};
 
 const deleteStore = async (req: Request, res: Response): Promise<void> => {
   const userid = req.userid;

@@ -46,7 +46,6 @@ const register = async (req: Request, res: Response): Promise<void> => {
   const newUser = await userModel.create({
     name: name,
     province: province,
-    // address:address,
     email: email,
     phone: phone,
     country: country
@@ -103,4 +102,45 @@ const login = async (req: Request, res: Response): Promise<void> => {
   res.json({ success: false, message: 'Usuario o contraseña incorrectos', token: false, errorId: 3 });
 };
 
-export { login, logout, register, deleteUser };
+
+const updatePassword = async (req: Request, res: Response): Promise<void> => {
+  const userid = req.userid;
+  const { password, newPassword, confirmPassword } = req.body;
+
+  if (!password || !newPassword || !confirmPassword) {
+    res.json({ success: false, message: 'Todos los campos son obligatorios.', errorId: 4 });
+    return;
+  }
+
+  // Verificar que las nuevas contraseñas coincidan
+  if (newPassword !== confirmPassword) {
+    res.json({ success: false, message: 'Las contraseñas no coinciden.', errorId: 5 });
+    return;
+  }
+
+  // Buscar al usuario en la base de datos
+  const userCredential = await UserCredentials.findOne({ where: { userId: userid } });
+
+  if (!userCredential) {
+    res.json({ success: false, message: 'Usuario no encontrado.', errorId: 6 });
+    return;
+  }
+
+  // Verificar que la contraseña actual sea válida
+  const isPasswordValid = await bcrypt.compare(password, userCredential.password);
+  if (!isPasswordValid) {
+    res.json({ success: false, message: 'Contraseña actual incorrecta.', errorId: 7 });
+    return;
+  }
+
+  // Encriptar la nueva contraseña
+  const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+  // Actualizar la contraseña en la base de datos
+  await userCredential.update({ password: hashedNewPassword });
+
+  res.json({ success: true, message: 'Contraseña actualizada con éxito.' });
+};
+
+
+export { login, logout, register, deleteUser, updatePassword };

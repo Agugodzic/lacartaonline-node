@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../../db/dbConfig.ts';
+import Plan from '../../plan/PlanModel.ts';
 
 interface UserAttributes {
   id?: number;
@@ -8,7 +9,8 @@ interface UserAttributes {
   phone: string;
   email: string;
   province: string | null;
-  plan: number | null;
+  planid: number | null;
+  activeSubscription: boolean;
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
@@ -18,48 +20,60 @@ class User extends Model<UserAttributes> implements UserAttributes {
   public phone!: string;
   public email!: string;
   public province!: string | null;
-  public plan!: number | null;
+  public planid!: number | null;
+  public activeSubscription!: boolean;
 
-  static associate() {
-    // Define las asociaciones con otros modelos si es necesario
+  static initModel() {
+    this.init({
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      province: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      activeSubscription: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      planid: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      }
+    }, {
+      sequelize: db,
+      modelName: 'User',
+      timestamps: true,
+      underscored: true,
+    });
+  }
+
+  public static associate(): void {
+    this.belongsTo(Plan, {
+      as: 'plan', foreignKey: 'planid'
+    });
   }
 }
 
-User.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  country: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  phone: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  province: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  plan: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  }
-}, {
-  sequelize: db,
-  modelName: 'User',
-  timestamps: true,
-  underscored: true,
-});
+
+User.initModel();
 
 export default User;

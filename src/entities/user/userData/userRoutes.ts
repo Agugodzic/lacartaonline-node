@@ -1,13 +1,11 @@
 import { Router } from 'express';
-import { deleteById, edit, add, getAll, getById } from './userController.ts';
+import { deleteById, edit, add, get } from './userController.ts';
 import handleErrorsMiddleware from '../../../lib/middlewares/handleErrorsMiddleware.ts';
 import authenticateToken from '../../../lib/middlewares/authenticateToken.ts';
 
 const userRoutes = Router();
 
-userRoutes.get('/user', authenticateToken, handleErrorsMiddleware(getAll));
-
-userRoutes.get('/user/:id', authenticateToken, handleErrorsMiddleware(getById));
+userRoutes.get('/user/:id', authenticateToken, handleErrorsMiddleware(get));
 
 userRoutes.post('/user/add', authenticateToken, handleErrorsMiddleware(add));
 

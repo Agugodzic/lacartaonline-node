@@ -11,8 +11,10 @@ interface ProductAttributes {
   unitprice: number;
   productname: string;
   description: string;
+  forDelivery: boolean;
   withVariants: boolean;
   image: string;
+  enabled: boolean;
 }
 
 class Product extends Model<ProductAttributes> implements ProductAttributes {
@@ -23,12 +25,16 @@ class Product extends Model<ProductAttributes> implements ProductAttributes {
   public productname!: string;
   public description!: string;
   public withVariants!: boolean;
+  public forDelivery!: boolean;
   public image!: string;
+  public enabled!: boolean;
 
   static associate() {
     this.hasOne(Variants, {
       as: 'variants',
       foreignKey: 'productid',
+      onDelete: 'CASCADE',  // Elimina la variante cuando se elimina el producto
+      hooks: true,
     });
 
     this.belongsTo(Category, {
@@ -71,6 +77,14 @@ Product.init(
     image: {
       type: DataTypes.TEXT('long'),
     },
+    forDelivery: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    enabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   },
   {
     sequelize: db,

@@ -1,16 +1,19 @@
+import Plan from '../../plan/PlanModel.ts';
 import User from './UserModel.ts';
 import { Request, Response } from 'express';
 
 const user = User;
 
-const getAll = async (req: Request, res: Response): Promise<void> => {
-  const results = await user.findAll();
-  res.json(results);
-}
+const get = async (req: Request, res: Response): Promise<void> => {
+  const id: number = req.userid;
+  const resource = await user.findOne({
+    where: { id },
 
-const getById = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
-  const resource = await user.findByPk(id);
+    include: [{
+      model: Plan,
+      as: 'plan',
+    }]
+  });
 
   res.json(resource);
 }
@@ -23,10 +26,13 @@ const add = async (req: Request, res: Response): Promise<void> => {
 }
 
 const edit = async (req: Request, res: Response): Promise<void> => {
+  const userid = req.userid;
   const resource = req.body;
-  const update = await user.update(resource, { where: { id: resource.id } });
 
-  res.json({ update: update, resource: resource });
+  await user.update(resource, { where: { id: userid } });
+  const updateObject = await user.findByPk(userid);
+
+  res.json(updateObject);
 }
 
 const deleteById = async (req: Request, res: Response): Promise<void> => {
@@ -36,4 +42,4 @@ const deleteById = async (req: Request, res: Response): Promise<void> => {
   res.json(deleteObject);
 }
 
-export { getAll, getById, add, edit, deleteById };
+export { get, add, edit, deleteById };

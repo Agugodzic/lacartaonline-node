@@ -3,6 +3,7 @@ import db from "../../db/dbConfig";
 import PayMethod from '../payMethod/PayMethodModel';
 import Product from '../product/ProductModel';
 import OpenHours from '../OpenHours/OpenHoursModel';
+import User from "../user/userData/UserModel";
 
 export interface StoreAttributes {
   id: number;
@@ -22,7 +23,7 @@ export interface StoreAttributes {
   locality?: string;
 }
 
-interface StoreCreationAttributes extends Optional<StoreAttributes, "id"> {}
+interface StoreCreationAttributes extends Optional<StoreAttributes, "id"> { }
 
 class Store extends Model<StoreAttributes, StoreCreationAttributes> implements StoreAttributes {
   public id!: number;
@@ -41,7 +42,7 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
   public store_category?: string;
   public locality?: string;
 
-  // Método estático para inicializar el modelo
+
   static initModel(): void {
     this.init(
       {
@@ -61,14 +62,14 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
           type: DataTypes.STRING,
           allowNull: true
         },
-        description:{
+        description: {
           type: DataTypes.STRING,
         },
         logo: {
-          type: DataTypes.TEXT('long') 
+          type: DataTypes.TEXT('long')
         },
         banner: {
-          type: DataTypes.TEXT('long') 
+          type: DataTypes.TEXT('long')
         },
         email: {
           type: DataTypes.STRING,
@@ -85,7 +86,7 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
         address: {
           type: DataTypes.STRING,
         },
-        cp:{
+        cp: {
           type: DataTypes.STRING,
         },
         store_category: {
@@ -104,7 +105,6 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
     );
   }
 
-  // Definir las relaciones con otros modelos
   static associate(): void {
     this.hasMany(PayMethod, {
       as: 'paymethods',
@@ -119,7 +119,6 @@ class Store extends Model<StoreAttributes, StoreCreationAttributes> implements S
   }
 }
 
-// Inicializar el modelo
 Store.initModel();
 
 

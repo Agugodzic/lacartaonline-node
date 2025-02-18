@@ -50,6 +50,7 @@ Variants.init(
   {
     sequelize: db,
     modelName: 'Variants',
+    tableName: 'variants',
     timestamps: false,
   }
 );

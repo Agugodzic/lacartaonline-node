@@ -1,5 +1,5 @@
 import mercadopago, { Preference ,  Payment} from "mercadopago";
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import mpFunctions from "../../lib/mercadopagoExtends";
 import { PaymentDataModel } from "../../lib/mercadopagoExtends/functions/createPreference";
 
@@ -33,12 +33,12 @@ const findPayment = async (req:Request,res:Response) =>{ //eslint-disable-line
  
 }
 
-const getPaymentStatus = async (req:Request,res:Response) =>{//eslint-disable-line 
+const getPaymentStatus = async (req:Request,res:Response) =>{ //eslint-disable-line 
  
 }
 
-const handleNotification = async (req:Request,res:Response) =>{//eslint-disable-line 
- 
+const handleNotification = async (req:Request,res:Response) =>{ //eslint-disable-line 
+  
 }
 
 const createPayment = async (req:Request<PaymentDataModel>,res:Response) =>{
@@ -48,5 +48,6 @@ const createPayment = async (req:Request<PaymentDataModel>,res:Response) =>{
 
   res.json(order);
 }
+
 
 export { createPayment, findPayment, getPaymentStatus, handleNotification, createSubscription}

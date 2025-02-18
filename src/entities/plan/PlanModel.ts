@@ -1,12 +1,13 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../../db/dbConfig';
+import User from '../user/userData/UserModel';
 
 interface PlanAttributes {
   id: number;
   name?: string | null;
   price?: number | null;
   maxProd?: number | null;
-  recomender: boolean;
+  recomended: boolean;
 }
 
 class Plan extends Model<PlanAttributes> implements PlanAttributes {
@@ -14,7 +15,8 @@ class Plan extends Model<PlanAttributes> implements PlanAttributes {
   public name?: string | null;
   public price?: number | null;
   public maxProd?: number | null;
-  public recomender!: boolean;
+  public recomended!: boolean;
+  
 
   // Método estático para inicializar el modelo
   static initModel(): void {
@@ -37,7 +39,7 @@ class Plan extends Model<PlanAttributes> implements PlanAttributes {
           type: DataTypes.INTEGER,
           allowNull: true,
         },
-        recomender: {
+        recomended: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
         },
@@ -49,6 +51,15 @@ class Plan extends Model<PlanAttributes> implements PlanAttributes {
         underscored: true,
       }
     );
+  }
+
+
+  public static associate(): void {
+    this.hasMany(User,
+      {
+        as: 'user',
+        foreignKey: 'planid'
+      });
   }
 }
 
