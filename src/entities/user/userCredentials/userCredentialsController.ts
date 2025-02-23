@@ -21,6 +21,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   res.json({ message: 'Usuario eliminado' });
 };
 
+
 //errors:
 // 1 - user already exist
 // 2 - email already exist
@@ -48,8 +49,10 @@ const register = async (req: Request, res: Response): Promise<void> => {
     province: province,
     email: email,
     phone: phone,
-    country: country
+    country: country,
+    activeSubscription: false,
   });
+
 
   await userCredentials.create({
     userId: newUser.id,
@@ -57,12 +60,16 @@ const register = async (req: Request, res: Response): Promise<void> => {
     password: hashedPassword
   });
 
+  // Excluye el id del usuario y lo guarda en un una nueva constante "userData"
+  const { id, ...userData } = newUser.toJSON();
+
+
   const secretKey = process.env.SECRET_KEY || ''; //eslint-disable-line
   const token = jwt.sign({ userId: newUser.id }, secretKey, { expiresIn: '24h' });
 
   res.json({
-    success: true, error: 'No errors', errorId: 0, token: token, data: {
-      ...newUser
+    success: true, error: 'No errors', errorId: 0, token: token, userData: {
+      ...userData
     }
   })
 };
@@ -81,18 +88,20 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
     if (isPasswordValid) {
       const secretKey = process.env.SECRET_KEY || ''; //eslint-disable-line
+
       const userData = await userModel.findOne({
         where: { id: userCredential.userId || 0 },
+        attributes: { exclude: ["id"] },
       });
 
       const userId = userCredential.userId || 0;
       if (keepConnected === true) {
-        const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '24h' });
+        const token = jwt.sign({ userId: userId }, secretKey);
         res.json({ success: true, message: 'Login success', token: token, userData: userData });
         return;
 
       } else {
-        const token = jwt.sign({ userId: userId }, secretKey);
+        const token = jwt.sign({ userId: userId }, secretKey, { expiresIn: '24h' });
         res.json({ success: true, message: 'Login success', token: token, userData: userData });
         return;
       }
